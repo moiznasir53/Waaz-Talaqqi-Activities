@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waaz Talaqqi — Ashara Mubaraka</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0f2d1f;
+    --green-mid: #1c4c32;
+    --green-light: #2e6b47;
+    --gold: #c9943a;
+    --gold-light: #e8c46a;
+    --gold-pale: #f5e6c0;
+    --cream: #faf5e9;
+    --cream-dark: #f0e8d0;
+    --text-dark: #1a1208;
+    --text-mid: #3d2e10;
+    --text-muted: #8a7a5a;
+    --white: #ffffff;
+    --card-shadow: 0 4px 24px rgba(15,45,31,0.13);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(160deg, var(--green-deep) 0%, var(--green-mid) 60%, #234a35 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image:
+      repeating-linear-gradient(45deg, var(--gold) 0, var(--gold) 1px, transparent 0, transparent 50%),
+      repeating-linear-gradient(-45deg, var(--gold) 0, var(--gold) 1px, transparent 0, transparent 50%);
+    background-size: 28px 28px;
+  }
+
+  .header-inner {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+
+  .header-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .ornament-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+    max-width: 80px;
+  }
+  .ornament-line.right { background: linear-gradient(to left, transparent, var(--gold)); }
+
+  .ornament-diamond {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .bismillah {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.85;
+  }
+
+  header h1 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-pale);
+    font-size: clamp(1.7rem, 5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  header h2 {
+    font-family: 'Crimson Pro', serif;
+    color: rgba(245,230,192,0.75);
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.03em;
+  }
+
+  .header-bottom-ornament {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .hbo-line { flex: 1; height: 1px; background: rgba(201,148,58,0.35); max-width: 120px; }
+  .hbo-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); opacity: 0.6; }
+
+  /* ── TABS ── */
+  .tabs-section {
+    background: var(--green-deep);
+    border-bottom: 2px solid rgba(201,148,58,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .tabs-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 16px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 16px 12px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245,230,192,0.5);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn:hover { color: var(--gold-light); }
+  .tab-btn.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 16px 60px;
+  }
+
+  .view { display: none; animation: fadeUp 0.3s ease; }
+  .view.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SELECT CONTROL ── */
+  .select-wrapper {
+    margin-bottom: 28px;
+  }
+
+  .select-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .styled-select {
+    width: 100%;
+    padding: 14px 20px;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    background: var(--white);
+    border: 2px solid var(--cream-dark);
+    border-radius: var(--radius);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231c4c32' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(15,45,31,0.07);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .styled-select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,148,58,0.15);
+  }
+
+  /* ── ZONE CARDS ── */
+  .zone-header {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .zone-icon {
+    width: 44px; height: 44px;
+    background: rgba(201,148,58,0.15);
+    border: 1px solid rgba(201,148,58,0.3);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .zone-header h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    color: var(--gold-pale);
+    font-weight: 600;
+  }
+
+  .zone-header p {
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.95rem;
+    color: rgba(245,230,192,0.6);
+    font-style: italic;
+    margin-top: 3px;
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .activity-card {
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .activity-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--gold);
+    border-radius: 12px 0 0 12px;
+  }
+
+  .activity-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(15,45,31,0.16);
+  }
+
+  .activity-card.na {
+    opacity: 0.45;
+    filter: grayscale(0.4);
+  }
+
+  .activity-card.na::before { background: var(--text-muted); }
+
+  .activity-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    color: var(--green-mid);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .activity-time {
+    font-size: 1.15rem;
+    color: var(--text-dark);
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .activity-time.na-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .activity-emoji {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* ── ACTIVITY VIEW CARDS ── */
+  .activity-header {
+    background: linear-gradient(135deg, #2a1a05, #5a3810);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .activity-header .zone-icon {
+    background: rgba(201,148,58,0.18);
+  }
+
+  .activity-header h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    color: var(--gold-pale);
+    font-weight: 600;
+  }
+
+  .zones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .zone-card {
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.15s;
+  }
+
+  .zone-card:hover { transform: translateX(3px); }
+
+  .zone-card.na-zone {
+    opacity: 0.35;
+  }
+
+  .zone-card-name {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    flex: 1;
+  }
+
+  .zone-card-time {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--green-mid);
+    background: var(--cream-dark);
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    text-align: right;
+    letter-spacing: 0.03em;
+  }
+
+  .zone-card-time.na-badge {
+    color: var(--text-muted);
+    background: #f0ede6;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0;
+  }
+
+  .zone-num {
+    width: 28px; height: 28px;
+    background: var(--green-deep);
+    color: var(--gold-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 14px;
+  }
+
+  .section-label span {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .section-label::before, .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--cream-dark);
+  }
+
+  /* ── PLACEHOLDER ── */
+  .placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+
+  .placeholder-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
+  .placeholder p { font-size: 1.1rem; font-style: italic; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--green-deep);
+    text-align: center;
+    padding: 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: rgba(245,230,192,0.35);
+    text-transform: uppercase;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 2px;
+  }
+
+  .ld-gold { background: var(--gold); }
+  .ld-gray { background: #c8c0b0; }
+
+  @media (max-width: 520px) {
+    .activities-grid { grid-template-columns: 1fr 1fr; }
+    .zone-card { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+
+  @media (max-width: 360px) {
+    .activities-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-pattern"></div>
+  <div class="header-inner">
+    <p class="bismillah">Ashara Mubaraka · 1447H</p>
+    <div class="header-ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-diamond" style="opacity:.5;transform:rotate(45deg) scale(0.6)"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line right"></div>
+    </div>
+    <h1>Waaz Talaqqi</h1>
+    <h2>Programme Schedule &amp; Venue Guide</h2>
+    <div class="header-bottom-ornament">
+      <div class="hbo-line"></div>
+      <div class="hbo-dot"></div>
+      <div class="hbo-dot" style="opacity:.35;width:3px;height:3px"></div>
+      <div class="hbo-dot"></div>
+      <div class="hbo-line"></div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-section">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('zone')">🕌 Browse by Zone</button>
+    <button class="tab-btn" onclick="switchTab('activity')">📚 Browse by Activity</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ZONE VIEW -->
+  <div class="view active" id="view-zone">
+    <div class="select-wrapper">
+      <label class="select-label" for="zone-select">Select your zone</label>
+      <select class="styled-select" id="zone-select" onchange="renderZoneView()">
+        <option value="">— Choose a Zone —</option>
+      </select>
+    </div>
+
+    <div id="zone-content">
+      <div class="placeholder">
+        <div class="placeholder-icon">🕌</div>
+        <p>Select a zone above to see all its activities and timings</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY VIEW -->
+  <div class="view" id="view-activity">
+    <div class="select-wrapper">
+      <label class="select-label" for="activity-select">Select an activity</label>
+      <select class="styled-select" id="activity-select" onchange="renderActivityView()">
+        <option value="">— Choose an Activity —</option>
+      </select>
+    </div>
+
+    <div id="activity-content">
+      <div class="placeholder">
+        <div class="placeholder-icon">📚</div>
+        <p>Select an activity above to see which zones conduct it and when</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Waaz Talaqqi · Ashara Mubaraka · Schedule Reference</footer>
+
+<script>
+// ──────────────────────────────────────────────
+// DATA
+// ──────────────────────────────────────────────
+
+const ACTIVITIES = [
+  { key: 'a0', name: 'Istibsaar (Age 0–4)',   emoji: '🌱' },
+  { key: 'a1', name: 'Istibsaar (Age 5–15)',  emoji: '📖' },
+  { key: 'a2', name: 'Istibsaar (Age 16–25)', emoji: '🎓' },
+  { key: 'a3', name: 'Istibsaar (General)',   emoji: '📚' },
+  { key: 'a4', name: 'Tilawat al-Quraan',     emoji: '🌙' },
+  { key: 'a5', name: 'Mardo Waaz Tafheem',    emoji: '🎙️' },
+  { key: 'a6', name: 'Bairao Waaz Tafheem',   emoji: '🎙️' },
+  { key: 'a7', name: 'English Istibsaar',     emoji: '🌍' },
+  { key: 'a8', name: 'Arabi Istibsaar',       emoji: '🌐' },
+  { key: 'a9', name: 'Mukhayyam al-Quraan',   emoji: '📿' },
+  { key: 'a10', name: 'Counselling Centre',   emoji: '💬' },
+  { key: 'a11', name: 'Insha al-Nazm',        emoji: '✍️' },
+  { key: 'a12', name: 'Sair e Ilmi',          emoji: '🌟' },
+  { key: 'a13', name: 'Akh e Husaini',        emoji: '❤️' },
+];
+
+const NA = null; // not available at this zone
+
+const ZONES = [
+  {
+    id: 1, name: 'Taheri Zone (CMZ)',
+    note: 'Central Masjid Zone',
+    timings: {
+      a0:  'Before Maghrib (Special Block)',
+      a1:  '6:30 PM – 7:30 PM',
+      a2:  NA,
+      a3:  '5:30 PM – 6:30 PM',
+      a4:  '6:30 PM – 6:40 PM',
+      a5:  '6:40 PM – 7:10 PM',
+      a6:  '6:40 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: '3:00 PM – 6:00 PM',
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 2, name: 'Adam Zone',
+    note: 'Adam Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: '3:00 PM – 6:00 PM',
+      a13: NA,
+    }
+  },
+  {
+    id: 3, name: 'Jamea Sind',
+    note: 'Al Jamea Tus Saifiyah',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  '6:30 PM – 7:15 PM',
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:20 PM – 6:30 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  '6:00 PM – 6:45 PM',
+      a8:  '6:00 PM – 6:45 PM',
+      a9:  '3:00 PM – 6:00 PM',
+      a10: '3:00 PM – 6:00 PM',
+      a11: '3:00 PM – 6:00 PM (selected days)',
+      a12: '3:00 PM – 6:00 PM',
+      a13: '3:00 PM – 6:00 PM (1 hr slot)',
+    }
+  },
+  {
+    id: 4, name: 'Mahallat Burhaniyah',
+    note: 'Al Mohallat Al Burhaniyah',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 5, name: 'Mahallat Fakhriyah',
+    note: 'Al Mohallat Al Fakhriyah',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 6, name: 'Mahallat Mohammediyah',
+    note: 'Al Mohallat Al Mohammediyah',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 7, name: 'Burhani Zone',
+    note: 'Burhani Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 8, name: 'Isa Zone',
+    note: 'Essa Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 9, name: 'Ezzy Zone',
+    note: 'Ezzi Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 10, name: 'Hasani Zone',
+    note: 'Hasani Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  '6:30 PM – 7:15 PM',
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  '6:00 PM – 6:45 PM',
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: '3:00 PM – 6:00 PM',
+      a11: NA,
+      a12: NA,
+      a13: '3:00 PM – 6:00 PM (1 hr slot)',
+    }
+  },
+  {
+    id: 11, name: 'Husaini Zone',
+    note: 'Hussaini Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 12, name: 'Hyderabad Sind',
+    note: 'Hyderabad (Sind)',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 13, name: 'Ibrahim Zone',
+    note: 'Ibrahim Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 14, name: 'Imadi Zone (KPI)',
+    note: 'KPI Ground',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 15, name: 'Jamali Zone',
+    note: 'Jamali Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 16, name: 'Mohammedi Zone',
+    note: 'Mohammadi Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 17, name: 'Qutbi Zone',
+    note: 'Qutbi Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 18, name: 'Saifee Zone',
+    note: 'Saify Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 19, name: 'Saleh Zone',
+    note: 'Saleh Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  NA,
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:45 PM – 6:55 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  NA,
+      a9:  '3:00 PM – 6:00 PM',
+      a10: NA,
+      a11: NA,
+      a12: NA,
+      a13: NA,
+    }
+  },
+  {
+    id: 20, name: 'Yusufi Zone',
+    note: 'Yousufi Mohalla',
+    timings: {
+      a0:  'Before Waaz Mubarak',
+      a1:  '6:00 PM – 6:45 PM',
+      a2:  '6:30 PM – 7:15 PM',
+      a3:  '6:00 PM – 6:45 PM',
+      a4:  '6:20 PM – 6:30 PM',
+      a5:  '6:55 PM – 7:10 PM',
+      a6:  '6:55 PM – 7:10 PM',
+      a7:  NA,
+      a8:  '6:00 PM – 6:45 PM',
+      a9:  '3:00 PM – 6:00 PM',
+      a10: '3:00 PM – 6:00 PM',
+      a11: '3:00 PM – 6:00 PM (selected days)',
+      a12: NA,
+      a13: '3:00 PM – 6:00 PM (1 hr slot)',
+    }
+  },
+];
+
+// ──────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────
+
+function init() {
+  const zSel = document.getElementById('zone-select');
+  ZONES.forEach(z => {
+    const o = document.createElement('option');
+    o.value = z.id;
+    o.textContent = z.name;
+    zSel.appendChild(o);
+  });
+
+  const aSel = document.getElementById('activity-select');
+  ACTIVITIES.forEach(a => {
+    const o = document.createElement('option');
+    o.value = a.key;
+    o.textContent = a.emoji + ' ' + a.name;
+    aSel.appendChild(o);
+  });
+}
+
+// ──────────────────────────────────────────────
+// TAB SWITCH
+// ──────────────────────────────────────────────
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'zone') || (i === 1 && tab === 'activity'));
+  });
+  document.getElementById('view-zone').classList.toggle('active', tab === 'zone');
+  document.getElementById('view-activity').classList.toggle('active', tab === 'activity');
+}
+
+// ──────────────────────────────────────────────
+// ZONE VIEW
+// ──────────────────────────────────────────────
+
+function renderZoneView() {
+  const zoneId = parseInt(document.getElementById('zone-select').value);
+  const container = document.getElementById('zone-content');
+
+  if (!zoneId) {
+    container.innerHTML = `<div class="placeholder"><div class="placeholder-icon">🕌</div><p>Select a zone above to see all its activities and timings</p></div>`;
+    return;
+  }
+
+  const zone = ZONES.find(z => z.id === zoneId);
+  if (!zone) return;
+
+  const availActs = ACTIVITIES.filter(a => zone.timings[a.key] !== null);
+  const naActs = ACTIVITIES.filter(a => zone.timings[a.key] === null);
+
+  let html = `
+    <div class="zone-header">
+      <div class="zone-icon">🕌</div>
+      <div>
+        <h3>${zone.name}</h3>
+        <p>${zone.note}</p>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot ld-gold"></div> Available at this zone</div>
+      <div class="legend-item"><div class="legend-dot ld-gray"></div> Not conducted here</div>
+    </div>
+    <div class="section-label"><span>Available Activities (${availActs.length})</span></div>
+    <div class="activities-grid">
+  `;
+
+  availActs.forEach(act => {
+    const time = zone.timings[act.key];
+    html += `
+      <div class="activity-card">
+        <span class="activity-emoji">${act.emoji}</span>
+        <div class="activity-name">${act.name}</div>
+        <div class="activity-time">${time}</div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  if (naActs.length > 0) {
+    html += `<div class="section-label"><span>Not Conducted Here (${naActs.length})</span></div><div class="activities-grid">`;
+    naActs.forEach(act => {
+      html += `
+        <div class="activity-card na">
+          <span class="activity-emoji">${act.emoji}</span>
+          <div class="activity-name">${act.name}</div>
+          <div class="activity-time na-text">Not at this zone</div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// ──────────────────────────────────────────────
+// ACTIVITY VIEW
+// ──────────────────────────────────────────────
+
+function renderActivityView() {
+  const actKey = document.getElementById('activity-select').value;
+  const container = document.getElementById('activity-content');
+
+  if (!actKey) {
+    container.innerHTML = `<div class="placeholder"><div class="placeholder-icon">📚</div><p>Select an activity above to see which zones conduct it and when</p></div>`;
+    return;
+  }
+
+  const act = ACTIVITIES.find(a => a.key === actKey);
+  if (!act) return;
+
+  const conducting = ZONES.filter(z => z.timings[actKey] !== null);
+  const notConducting = ZONES.filter(z => z.timings[actKey] === null);
+
+  let html = `
+    <div class="activity-header">
+      <div class="zone-icon">${act.emoji}</div>
+      <div>
+        <h3>${act.name}</h3>
+        <p style="color:rgba(245,230,192,0.6);font-style:italic;font-size:0.95rem;margin-top:3px;">
+          Conducted in ${conducting.length} of ${ZONES.length} zones
+        </p>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot ld-gold"></div> Conducted at zone</div>
+      <div class="legend-item"><div class="legend-dot ld-gray"></div> Not at this zone</div>
+    </div>
+    <div class="section-label"><span>Zones Conducting This Activity (${conducting.length})</span></div>
+    <div class="zones-list">
+  `;
+
+  conducting.forEach(z => {
+    const time = z.timings[actKey];
+    html += `
+      <div class="zone-card">
+        <div class="zone-num">${z.id}</div>
+        <div class="zone-card-name">${z.name}<br><span style="font-size:0.85rem;color:var(--text-muted);font-style:italic">${z.note}</span></div>
+        <div class="zone-card-time">${time}</div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  if (notConducting.length > 0) {
+    html += `<div class="section-label"><span>Not Conducted At (${notConducting.length})</span></div><div class="zones-list">`;
+    notConducting.forEach(z => {
+      html += `
+        <div class="zone-card na-zone">
+          <div class="zone-num">${z.id}</div>
+          <div class="zone-card-name">${z.name}</div>
+          <div class="zone-card-time na-badge">Not here</div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// Boot
+init();
+</script>
+</body>
+</html>
