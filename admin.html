@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Waaz Talaqqi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0d1117;
+  --bg2:       #161b22;
+  --bg3:       #1f2937;
+  --border:    #2d3748;
+  --border2:   #374151;
+  --gold:      #c9943a;
+  --gold-dim:  #8a6520;
+  --gold-pale: #f5e6c0;
+  --green:     #1c4c32;
+  --green-l:   #2e7d52;
+  --red:       #c0392b;
+  --red-dim:   #7b241c;
+  --blue:      #2563eb;
+  --text:      #e2e8f0;
+  --text-mid:  #94a3b8;
+  --text-dim:  #4b5563;
+  --radius:    8px;
+  --shadow:    0 4px 24px rgba(0,0,0,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ══════════════════════════════
+   LOGIN SCREEN
+══════════════════════════════ */
+#login-screen {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.4s ease;
+}
+#login-screen.hidden { display: none; }
+
+.login-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 360px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.login-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.login-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  color: var(--gold-pale);
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  font-style: italic;
+  margin-bottom: 32px;
+}
+
+.login-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+  margin-bottom: 28px;
+}
+
+.field-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.text-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 20px;
+}
+.text-input:focus { border-color: var(--gold); }
+
+.btn-primary {
+  width: 100%;
+  background: var(--gold);
+  color: #1a1208;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover { background: var(--gold-pale); }
+.btn-primary:active { transform: scale(0.98); }
+
+.login-error {
+  color: #f87171;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  font-style: italic;
+  min-height: 20px;
+}
+
+/* ══════════════════════════════
+   APP LAYOUT
+══════════════════════════════ */
+#app { display: none; height: 100vh; flex-direction: column; }
+#app.visible { display: flex; }
+
+/* TOP BAR */
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar-badge {
+  background: var(--gold);
+  color: #1a1208;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.topbar-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: var(--gold-pale);
+  font-weight: 600;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-sm {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-gold {
+  background: var(--gold);
+  color: #1a1208;
+}
+.btn-gold:hover { background: var(--gold-pale); }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text-mid);
+}
+.btn-outline:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid var(--red-dim);
+  color: #f87171;
+}
+.btn-danger:hover { background: var(--red-dim); }
+
+.btn-green {
+  background: var(--green);
+  color: var(--gold-pale);
+  border: 1px solid var(--green-l);
+}
+.btn-green:hover { background: var(--green-l); }
+
+/* LAYOUT BODY */
+.layout-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  padding: 20px 12px 8px;
+}
+
+.sidebar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  transition: all 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: rgba(201,148,58,0.12); color: var(--gold-pale); border-left: 2px solid var(--gold); }
+
+.nav-icon { font-size: 1rem; flex-shrink: 0; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--bg3);
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.nav-item.active .nav-badge { background: rgba(201,148,58,0.2); color: var(--gold); }
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 12px;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 28px 60px;
+}
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active { display: block; animation: fadeUp 0.25s ease; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* PAGE HEADER */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+.page-header-left h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.35rem;
+  color: var(--gold-pale);
+  margin-bottom: 4px;
+}
+.page-header-left p {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  font-style: italic;
+}
+
+/* STATS GRID */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.stat-sub {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* CARD */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.card-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--text-mid);
+  text-transform: uppercase;
+}
+
+/* LIST */
+.item-list { padding: 8px; }
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: background 0.1s;
+}
+.list-item:hover { background: var(--bg3); }
+
+.item-num {
+  width: 26px; height: 26px;
+  background: var(--bg3);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-mid);
+  flex-shrink: 0;
+}
+
+.item-name {
+  flex: 1;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.item-sub {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  font-style: italic;
+}
+
+.item-emoji {
+  font-size: 1.2rem;
+  width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.item-actions {
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.list-item:hover .item-actions { opacity: 1; }
+
+.icon-btn {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  background: var(--bg3);
+  color: var(--text-mid);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+.icon-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.icon-btn.del:hover { border-color: var(--red-dim); color: #f87171; background: rgba(192,57,43,0.1); }
+
+/* ── TIMINGS MATRIX ── */
+.matrix-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.matrix-table {
+  border-collapse: collapse;
+  min-width: 100%;
+  font-size: 0.82rem;
+}
+
+.matrix-table th {
+  background: var(--bg3);
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.matrix-table th.zone-col {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  min-width: 160px;
+  text-align: left;
+}
+
+.matrix-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+  vertical-align: middle;
+}
+
+.matrix-table td.zone-td {
+  background: var(--bg2);
+  padding: 10px 14px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.zone-td-name {
+  font-size: 0.88rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.zone-td-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.timing-cell {
+  min-width: 130px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.1s;
+  position: relative;
+}
+.timing-cell:hover { background: rgba(201,148,58,0.07); }
+
+.timing-cell.has-time {
+  color: var(--gold-pale);
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.timing-cell.no-time {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-style: normal;
+}
+
+.timing-cell .edit-hint {
+  position: absolute;
+  top: 3px; right: 4px;
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  opacity: 0;
+}
+.timing-cell:hover .edit-hint { opacity: 1; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s;
+  backdrop-filter: blur(3px);
+}
+.modal-overlay.hidden { display: none; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  width: 460px;
+  max-width: 95vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: fadeUp 0.2s ease;
+}
+
+.modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: var(--gold-pale);
+}
+
+.modal-close {
+  background: none; border: none; color: var(--text-dim);
+  font-size: 1.2rem; cursor: pointer; padding: 4px;
+  transition: color 0.15s;
+}
+.modal-close:hover { color: var(--text); }
+
+.modal-body { padding: 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+.form-group { margin-bottom: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.radio-group { display: flex; gap: 10px; margin-bottom: 14px; }
+.radio-option {
+  flex: 1;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  transition: all 0.15s;
+  user-select: none;
+}
+.radio-option.selected { border-color: var(--gold); background: rgba(201,148,58,0.08); color: var(--gold-pale); }
+
+/* ── EXPORT ── */
+.export-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #7dd3fc;
+  line-height: 1.7;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre;
+  margin-bottom: 14px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--green);
+  border: 1px solid var(--green-l);
+  color: var(--gold-pale);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  padding: 12px 18px;
+  border-radius: 8px;
+  z-index: 500;
+  animation: slideUp 0.25s ease;
+  box-shadow: var(--shadow);
+}
+.toast.error { background: var(--red-dim); border-color: var(--red); }
+.toast.hidden { display: none; }
+
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-dim);
+}
+.empty-icon { font-size: 2rem; margin-bottom: 10px; opacity: 0.4; }
+.empty-text { font-size: 0.9rem; font-style: italic; }
+
+/* ── SEARCH ── */
+.search-bar {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 9px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text);
+  outline: none;
+  width: 220px;
+  transition: border-color 0.2s;
+}
+.search-bar:focus { border-color: var(--gold-dim); }
+.search-bar::placeholder { color: var(--text-dim); }
+
+/* ── ACTIVITY MATRIX FILTER ── */
+.filter-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.color-legend {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.cl-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-mid); }
+.cl-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Waaz Talaqqi · Admin</div>
+    <div class="login-divider"></div>
+    <h1 class="login-title">Admin Panel</h1>
+    <p class="login-sub">Manage zones, activities & timings</p>
+    <label class="field-label" for="pwd-input">Password</label>
+    <input class="text-input" type="password" id="pwd-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-primary" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     MAIN APP
+══════════════════════════════ -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-badge">ADMIN</span>
+      <span class="topbar-title">Waaz Talaqqi — Programme Manager</span>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-sm btn-green" onclick="saveAll()">💾 Save Changes</button>
+      <button class="btn-sm btn-outline" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="layout-body">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Navigation</div>
+        <button class="nav-item active" onclick="nav('dashboard')" id="nav-dashboard">
+          <span class="nav-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-item" onclick="nav('zones')" id="nav-zones">
+          <span class="nav-icon">🕌</span> Zones
+          <span class="nav-badge" id="nb-zones">0</span>
+        </button>
+        <button class="nav-item" onclick="nav('activities')" id="nav-activities">
+          <span class="nav-icon">📚</span> Activities
+          <span class="nav-badge" id="nb-activities">0</span>
+        </button>
+        <div class="sidebar-divider"></div>
+        <button class="nav-item" onclick="nav('timings')" id="nav-timings">
+          <span class="nav-icon">🕐</span> Timings Matrix
+        </button>
+        <div class="sidebar-divider"></div>
+        <button class="nav-item" onclick="nav('export')" id="nav-export">
+          <span class="nav-icon">📤</span> Export Code
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Dashboard</h1>
+            <p>Overview of Waaz Talaqqi programme data</p>
+          </div>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Quick Actions</span></div>
+          <div style="padding:20px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-sm btn-gold" onclick="nav('zones');openAddZoneModal()">+ Add Zone</button>
+            <button class="btn-sm btn-gold" onclick="nav('activities');openAddActivityModal()">+ Add Activity</button>
+            <button class="btn-sm btn-outline" onclick="nav('timings')">✏️ Edit Timings</button>
+            <button class="btn-sm btn-outline" onclick="nav('export')">📤 Export</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Activity Coverage by Zone</span></div>
+          <div style="padding:14px;" id="coverage-list"></div>
+        </div>
+      </div>
+
+      <!-- ── ZONES ── -->
+      <div class="panel" id="panel-zones">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Zones</h1>
+            <p>Manage venue zones for Ashara Mubaraka</p>
+          </div>
+          <button class="btn-sm btn-gold" onclick="openAddZoneModal()">+ Add Zone</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" id="zones-count-label">All Zones</span>
+            <input class="search-bar" placeholder="Search zones…" oninput="filterZones(this.value)">
+          </div>
+          <div class="item-list" id="zones-list"></div>
+        </div>
+      </div>
+
+      <!-- ── ACTIVITIES ── -->
+      <div class="panel" id="panel-activities">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Activities</h1>
+            <p>Manage programme activities for Waaz Talaqqi</p>
+          </div>
+          <button class="btn-sm btn-gold" onclick="openAddActivityModal()">+ Add Activity</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" id="acts-count-label">All Activities</span>
+            <input class="search-bar" placeholder="Search activities…" oninput="filterActivities(this.value)">
+          </div>
+          <div class="item-list" id="activities-list"></div>
+        </div>
+      </div>
+
+      <!-- ── TIMINGS ── -->
+      <div class="panel" id="panel-timings">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Timings Matrix</h1>
+            <p>Click any cell to edit a zone-activity timing</p>
+          </div>
+        </div>
+        <div class="color-legend">
+          <div class="cl-item"><div class="cl-dot" style="background:var(--gold)"></div> Time assigned</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--bg3)"></div> Not applicable / N/A</div>
+        </div>
+        <div class="matrix-wrapper">
+          <table class="matrix-table" id="matrix-table"></table>
+        </div>
+      </div>
+
+      <!-- ── EXPORT ── -->
+      <div class="panel" id="panel-export">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Export Code</h1>
+            <p>Copy the generated JavaScript and replace the data section in your <code style="font-family:JetBrains Mono,monospace;font-size:0.85em;color:var(--gold)">index.html</code></p>
+          </div>
+          <button class="btn-sm btn-gold" onclick="copyExport()">📋 Copy to Clipboard</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">How to use</span>
+          </div>
+          <div style="padding:18px 20px;font-size:0.9rem;color:var(--text-mid);line-height:1.7;">
+            1. Click <strong style="color:var(--gold)">Copy to Clipboard</strong> above.<br>
+            2. Open your <code style="font-family:JetBrains Mono,monospace;color:var(--gold)">index.html</code> in a code editor.<br>
+            3. Find the <code style="font-family:JetBrains Mono,monospace;color:var(--gold)">// ── DATA ──</code> section.<br>
+            4. Replace the entire <code style="font-family:JetBrains Mono,monospace;color:var(--gold)">const ACTIVITIES = [...]</code> and <code style="font-family:JetBrains Mono,monospace;color:var(--gold)">const ZONES = [...]</code> with the copied code.<br>
+            5. Save and deploy.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Generated JavaScript</span></div>
+          <div style="padding:14px;">
+            <div class="export-box" id="export-box"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     MODALS
+══════════════════════════════ -->
+
+<!-- Add/Edit Zone Modal -->
+<div class="modal-overlay hidden" id="zone-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="zone-modal-title">Add Zone</div>
+      <button class="modal-close" onclick="closeModal('zone-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="zone-edit-id">
+      <div class="form-group">
+        <label class="field-label">Zone Name *</label>
+        <input class="text-input" id="zone-name-input" placeholder="e.g. Hasani Zone">
+      </div>
+      <div class="form-group">
+        <label class="field-label">Venue / Mohalla Name</label>
+        <input class="text-input" id="zone-note-input" placeholder="e.g. Hasani Mohalla">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('zone-modal')">Cancel</button>
+      <button class="btn-sm btn-gold" onclick="saveZone()">Save Zone</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Activity Modal -->
+<div class="modal-overlay hidden" id="activity-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="act-modal-title">Add Activity</div>
+      <button class="modal-close" onclick="closeModal('activity-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="act-edit-key">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="field-label">Activity Name *</label>
+          <input class="text-input" id="act-name-input" placeholder="e.g. Mukhayyam al-Quraan">
+        </div>
+        <div class="form-group">
+          <label class="field-label">Emoji Icon</label>
+          <input class="text-input" id="act-emoji-input" placeholder="📚" maxlength="4">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('activity-modal')">Cancel</button>
+      <button class="btn-sm btn-gold" onclick="saveActivity()">Save Activity</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Timing Modal -->
+<div class="modal-overlay hidden" id="timing-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Timing</div>
+      <button class="modal-close" onclick="closeModal('timing-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="t-zone-id">
+      <input type="hidden" id="t-act-key">
+      <div style="margin-bottom:16px;padding:12px 14px;background:var(--bg3);border-radius:6px;font-size:0.88rem;color:var(--text-mid);">
+        <span id="t-zone-name" style="color:var(--gold-pale);"></span>
+        <span style="margin:0 8px;opacity:0.4">→</span>
+        <span id="t-act-name"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">Status</label>
+        <div class="radio-group">
+          <div class="radio-option selected" id="ro-available" onclick="selectRadio('available')">✅ Has Timing</div>
+          <div class="radio-option" id="ro-na" onclick="selectRadio('na')">❌ Not Applicable</div>
+        </div>
+      </div>
+
+      <div id="timing-fields">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="field-label">Start Time</label>
+            <input class="text-input" id="t-start" placeholder="e.g. 6:00 PM">
+          </div>
+          <div class="form-group">
+            <label class="field-label">End Time</label>
+            <input class="text-input" id="t-end" placeholder="e.g. 6:45 PM">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Extra Note (optional)</label>
+          <input class="text-input" id="t-note" placeholder="e.g. selected days only">
+        </div>
+        <div style="padding:10px 12px;background:var(--bg3);border-radius:6px;margin-bottom:4px;">
+          <div class="field-label" style="margin-bottom:8px;">Common Quick-fill</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn-sm btn-outline" style="font-size:0.65rem;" onclick="quickFill('Before Waaz Mubarak','')">Before Waaz</button>
+            <button class="btn-sm btn-outline" style="font-size:0.65rem;" onclick="quickFill('3:00 PM','6:00 PM')">3:00–6:00 PM</button>
+            <button class="btn-sm btn-outline" style="font-size:0.65rem;" onclick="quickFill('6:00 PM','6:45 PM')">6:00–6:45 PM</button>
+            <button class="btn-sm btn-outline" style="font-size:0.65rem;" onclick="quickFill('6:30 PM','7:15 PM')">6:30–7:15 PM</button>
+            <button class="btn-sm btn-outline" style="font-size:0.65rem;" onclick="quickFill('6:45 PM','7:10 PM')">6:45–7:10 PM</button>
+            <button class="btn-sm btn-outline" style="font-size:0.65rem;" onclick="quickFill('6:55 PM','7:10 PM')">6:55–7:10 PM</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('timing-modal')">Cancel</button>
+      <button class="btn-sm btn-gold" onclick="saveTiming()">Save Timing</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal-overlay hidden" id="confirm-modal">
+  <div class="modal" style="width:360px">
+    <div class="modal-header">
+      <div class="modal-title">Confirm Delete</div>
+      <button class="modal-close" onclick="closeModal('confirm-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-mid);font-size:0.95rem;line-height:1.6;" id="confirm-msg">Are you sure?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('confirm-modal')">Cancel</button>
+      <button class="btn-sm btn-danger" id="confirm-ok-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════════
+const ADMIN_PASS = 'admin1447';
+
+function doLogin() {
+  const val = document.getElementById('pwd-input').value;
+  if (val === ADMIN_PASS) {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    initApp();
+  } else {
+    document.getElementById('login-error').textContent = 'Incorrect password. Try again.';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+function logout() {
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('login-error').textContent = '';
+}
+
+// ══════════════════════════════════════════════════════
+// DATA (seeded from the spreadsheet)
+// ══════════════════════════════════════════════════════
+let DATA = null;
+
+const SEED = {
+  activities: [
+    { key: 'a0',  name: 'Istibsaar (Age 0–4)',   emoji: '🌱' },
+    { key: 'a1',  name: 'Istibsaar (Age 5–15)',  emoji: '📖' },
+    { key: 'a2',  name: 'Istibsaar (Age 16–25)', emoji: '🎓' },
+    { key: 'a3',  name: 'Istibsaar (General)',   emoji: '📚' },
+    { key: 'a4',  name: 'Tilawat al-Quraan',     emoji: '🌙' },
+    { key: 'a5',  name: 'Mardo Waaz Tafheem',    emoji: '🎙️' },
+    { key: 'a6',  name: 'Bairao Waaz Tafheem',   emoji: '🎙️' },
+    { key: 'a7',  name: 'English Istibsaar',     emoji: '🌍' },
+    { key: 'a8',  name: 'Arabi Istibsaar',       emoji: '🌐' },
+    { key: 'a9',  name: 'Mukhayyam al-Quraan',   emoji: '📿' },
+    { key: 'a10', name: 'Counselling Centre',    emoji: '💬' },
+    { key: 'a11', name: 'Insha al-Nazm',         emoji: '✍️' },
+    { key: 'a12', name: 'Sair e Ilmi',           emoji: '🌟' },
+    { key: 'a13', name: 'Akh e Husaini',         emoji: '❤️' },
+  ],
+  zones: [
+    { id:1,  name:'Taheri Zone (CMZ)',       note:'Central Masjid Zone',
+      timings:{ a0:'Before Maghrib (Special Block)', a1:'6:30 PM – 7:30 PM', a2:null, a3:'5:30 PM – 6:30 PM', a4:'6:30 PM – 6:40 PM', a5:'6:40 PM – 7:10 PM', a6:'6:40 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:'3:00 PM – 6:00 PM', a11:null, a12:null, a13:null }},
+    { id:2,  name:'Adam Zone',              note:'Adam Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:'3:00 PM – 6:00 PM', a13:null }},
+    { id:3,  name:'Jamea Sind',             note:'Al Jamea Tus Saifiyah',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:'6:30 PM – 7:15 PM', a3:'6:00 PM – 6:45 PM', a4:'6:20 PM – 6:30 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:'6:00 PM – 6:45 PM', a8:'6:00 PM – 6:45 PM', a9:'3:00 PM – 6:00 PM', a10:'3:00 PM – 6:00 PM', a11:'3:00 PM – 6:00 PM (selected days)', a12:'3:00 PM – 6:00 PM', a13:'3:00 PM – 6:00 PM (1 hr slot)' }},
+    { id:4,  name:'Mahallat Burhaniyah',    note:'Al Mohallat Al Burhaniyah',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:5,  name:'Mahallat Fakhriyah',     note:'Al Mohallat Al Fakhriyah',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:6,  name:'Mahallat Mohammediyah', note:'Al Mohallat Al Mohammediyah',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:7,  name:'Burhani Zone',           note:'Burhani Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:8,  name:'Isa Zone',               note:'Essa Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:9,  name:'Ezzy Zone',              note:'Ezzi Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:10, name:'Hasani Zone',            note:'Hasani Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:'6:30 PM – 7:15 PM', a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:'6:00 PM – 6:45 PM', a8:null, a9:'3:00 PM – 6:00 PM', a10:'3:00 PM – 6:00 PM', a11:null, a12:null, a13:'3:00 PM – 6:00 PM (1 hr slot)' }},
+    { id:11, name:'Husaini Zone',           note:'Hussaini Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:12, name:'Hyderabad Sind',         note:'Hyderabad (Sind)',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:13, name:'Ibrahim Zone',           note:'Ibrahim Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:14, name:'Imadi Zone (KPI)',       note:'KPI Ground',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:15, name:'Jamali Zone',            note:'Jamali Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:16, name:'Mohammedi Zone',         note:'Mohammadi Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:17, name:'Qutbi Zone',             note:'Qutbi Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:18, name:'Saifee Zone',            note:'Saify Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:19, name:'Saleh Zone',             note:'Saleh Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:null, a3:'6:00 PM – 6:45 PM', a4:'6:45 PM – 6:55 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:null, a9:'3:00 PM – 6:00 PM', a10:null, a11:null, a12:null, a13:null }},
+    { id:20, name:'Yusufi Zone',            note:'Yousufi Mohalla',
+      timings:{ a0:'Before Waaz Mubarak', a1:'6:00 PM – 6:45 PM', a2:'6:30 PM – 7:15 PM', a3:'6:00 PM – 6:45 PM', a4:'6:20 PM – 6:30 PM', a5:'6:55 PM – 7:10 PM', a6:'6:55 PM – 7:10 PM', a7:null, a8:'6:00 PM – 6:45 PM', a9:'3:00 PM – 6:00 PM', a10:'3:00 PM – 6:00 PM', a11:'3:00 PM – 6:00 PM (selected days)', a12:null, a13:'3:00 PM – 6:00 PM (1 hr slot)' }},
+  ]
+};
+
+function loadData() {
+  const stored = localStorage.getItem('wt_admin_data');
+  if (stored) { try { DATA = JSON.parse(stored); } catch(e) { DATA = JSON.parse(JSON.stringify(SEED)); } }
+  else { DATA = JSON.parse(JSON.stringify(SEED)); }
+}
+
+function saveAll() {
+  // Ensure all zones have all activity keys
+  DATA.zones.forEach(z => {
+    DATA.activities.forEach(a => {
+      if (!(a.key in z.timings)) z.timings[a.key] = null;
+    });
+  });
+  localStorage.setItem('wt_admin_data', JSON.stringify(DATA));
+  showToast('✅ Changes saved successfully');
+  renderAll();
+}
+
+// ══════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════
+function nav(id) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-' + id).classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+  if (id === 'timings') renderMatrix();
+  if (id === 'export') renderExport();
+  if (id === 'dashboard') renderDashboard();
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+function initApp() {
+  loadData();
+  renderAll();
+}
+
+function renderAll() {
+  updateNavBadges();
+  renderZonesList();
+  renderActivitiesList();
+  renderDashboard();
+}
+
+function updateNavBadges() {
+  document.getElementById('nb-zones').textContent = DATA.zones.length;
+  document.getElementById('nb-activities').textContent = DATA.activities.length;
+}
+
+// ══════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderDashboard() {
+  const totalCells = DATA.zones.length * DATA.activities.length;
+  let setCount = 0;
+  DATA.zones.forEach(z => DATA.activities.forEach(a => { if (z.timings[a.key]) setCount++; }));
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total Zones</div>
+      <div class="stat-val">${DATA.zones.length}</div>
+      <div class="stat-sub">venues / mohallas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Activities</div>
+      <div class="stat-val">${DATA.activities.length}</div>
+      <div class="stat-sub">programme types</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Timings Set</div>
+      <div class="stat-val">${setCount}</div>
+      <div class="stat-sub">of ${totalCells} possible</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Coverage</div>
+      <div class="stat-val" style="font-size:1.6rem">${Math.round(setCount/totalCells*100)}%</div>
+      <div class="stat-sub">cells filled</div>
+    </div>
+  `;
+
+  // Coverage list
+  const cl = document.getElementById('coverage-list');
+  cl.innerHTML = DATA.zones.map(z => {
+    const total = DATA.activities.length;
+    const set = DATA.activities.filter(a => z.timings[a.key]).length;
+    const pct = Math.round(set/total*100);
+    const bar = `<div style="flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:var(--gold);border-radius:3px;"></div></div>`;
+    return `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.88rem;">
+      <span style="width:150px;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${z.name}</span>
+      ${bar}
+      <span style="font-family:JetBrains Mono,monospace;font-size:0.68rem;color:var(--gold);width:40px;text-align:right">${set}/${total}</span>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// ZONES
+// ══════════════════════════════════════════════════════
+function renderZonesList(filter='') {
+  const list = document.getElementById('zones-list');
+  const filtered = DATA.zones.filter(z => z.name.toLowerCase().includes(filter.toLowerCase()) || z.note.toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('zones-count-label').textContent = `All Zones (${filtered.length})`;
+
+  if (!filtered.length) { list.innerHTML = `<div class="empty-state"><div class="empty-icon">🕌</div><div class="empty-text">No zones found</div></div>`; return; }
+
+  list.innerHTML = filtered.map((z, i) => `
+    <div class="list-item">
+      <div class="item-num">${z.id}</div>
+      <div style="flex:1">
+        <div class="item-name">${z.name}</div>
+        <div class="item-sub">${z.note}</div>
+      </div>
+      <div class="item-actions">
+        <button class="icon-btn" onclick="openEditZoneModal(${z.id})" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="confirmDeleteZone(${z.id})" title="Delete">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterZones(v) { renderZonesList(v); }
+
+function openAddZoneModal() {
+  document.getElementById('zone-modal-title').textContent = 'Add Zone';
+  document.getElementById('zone-edit-id').value = '';
+  document.getElementById('zone-name-input').value = '';
+  document.getElementById('zone-note-input').value = '';
+  openModal('zone-modal');
+}
+
+function openEditZoneModal(id) {
+  const z = DATA.zones.find(z => z.id === id);
+  if (!z) return;
+  document.getElementById('zone-modal-title').textContent = 'Edit Zone';
+  document.getElementById('zone-edit-id').value = id;
+  document.getElementById('zone-name-input').value = z.name;
+  document.getElementById('zone-note-input').value = z.note;
+  openModal('zone-modal');
+}
+
+function saveZone() {
+  const name = document.getElementById('zone-name-input').value.trim();
+  const note = document.getElementById('zone-note-input').value.trim();
+  const editId = document.getElementById('zone-edit-id').value;
+
+  if (!name) { showToast('Zone name is required', true); return; }
+
+  if (editId) {
+    const z = DATA.zones.find(z => z.id === parseInt(editId));
+    if (z) { z.name = name; z.note = note; }
+  } else {
+    const newId = DATA.zones.length ? Math.max(...DATA.zones.map(z => z.id)) + 1 : 1;
+    const timings = {};
+    DATA.activities.forEach(a => timings[a.key] = null);
+    DATA.zones.push({ id: newId, name, note, timings });
+  }
+  closeModal('zone-modal');
+  renderAll();
+  showToast(editId ? '✅ Zone updated' : '✅ Zone added');
+}
+
+function confirmDeleteZone(id) {
+  const z = DATA.zones.find(z => z.id === id);
+  document.getElementById('confirm-msg').textContent = `Delete zone "${z.name}"? This will also remove all its timing data.`;
+  document.getElementById('confirm-ok-btn').onclick = () => { deleteZone(id); closeModal('confirm-modal'); };
+  openModal('confirm-modal');
+}
+
+function deleteZone(id) {
+  DATA.zones = DATA.zones.filter(z => z.id !== id);
+  renderAll();
+  showToast('🗑️ Zone deleted');
+}
+
+// ══════════════════════════════════════════════════════
+// ACTIVITIES
+// ══════════════════════════════════════════════════════
+function renderActivitiesList(filter='') {
+  const list = document.getElementById('activities-list');
+  const filtered = DATA.activities.filter(a => a.name.toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('acts-count-label').textContent = `All Activities (${filtered.length})`;
+
+  if (!filtered.length) { list.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-text">No activities found</div></div>`; return; }
+
+  list.innerHTML = filtered.map((a, i) => `
+    <div class="list-item">
+      <div class="item-emoji">${a.emoji}</div>
+      <div class="item-name">${a.name}</div>
+      <div style="margin-left:auto;font-family:JetBrains Mono,monospace;font-size:0.65rem;color:var(--text-dim);padding-right:6px;">
+        ${DATA.zones.filter(z => z.timings[a.key]).length}/${DATA.zones.length} zones
+      </div>
+      <div class="item-actions">
+        <button class="icon-btn" onclick="openEditActivityModal('${a.key}')" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="confirmDeleteActivity('${a.key}')" title="Delete">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterActivities(v) { renderActivitiesList(v); }
+
+function openAddActivityModal() {
+  document.getElementById('act-modal-title').textContent = 'Add Activity';
+  document.getElementById('act-edit-key').value = '';
+  document.getElementById('act-name-input').value = '';
+  document.getElementById('act-emoji-input').value = '';
+  openModal('activity-modal');
+}
+
+function openEditActivityModal(key) {
+  const a = DATA.activities.find(a => a.key === key);
+  if (!a) return;
+  document.getElementById('act-modal-title').textContent = 'Edit Activity';
+  document.getElementById('act-edit-key').value = key;
+  document.getElementById('act-name-input').value = a.name;
+  document.getElementById('act-emoji-input').value = a.emoji;
+  openModal('activity-modal');
+}
+
+function saveActivity() {
+  const name = document.getElementById('act-name-input').value.trim();
+  const emoji = document.getElementById('act-emoji-input').value.trim() || '📌';
+  const editKey = document.getElementById('act-edit-key').value;
+
+  if (!name) { showToast('Activity name is required', true); return; }
+
+  if (editKey) {
+    const a = DATA.activities.find(a => a.key === editKey);
+    if (a) { a.name = name; a.emoji = emoji; }
+  } else {
+    const newKey = 'a' + Date.now();
+    DATA.activities.push({ key: newKey, name, emoji });
+    DATA.zones.forEach(z => z.timings[newKey] = null);
+  }
+  closeModal('activity-modal');
+  renderAll();
+  showToast(editKey ? '✅ Activity updated' : '✅ Activity added');
+}
+
+function confirmDeleteActivity(key) {
+  const a = DATA.activities.find(a => a.key === key);
+  document.getElementById('confirm-msg').textContent = `Delete activity "${a.name}"? This will remove all its timing data across all zones.`;
+  document.getElementById('confirm-ok-btn').onclick = () => { deleteActivity(key); closeModal('confirm-modal'); };
+  openModal('confirm-modal');
+}
+
+function deleteActivity(key) {
+  DATA.activities = DATA.activities.filter(a => a.key !== key);
+  DATA.zones.forEach(z => delete z.timings[key]);
+  renderAll();
+  showToast('🗑️ Activity deleted');
+}
+
+// ══════════════════════════════════════════════════════
+// TIMINGS MATRIX
+// ══════════════════════════════════════════════════════
+function renderMatrix() {
+  const tbl = document.getElementById('matrix-table');
+
+  // Header row
+  let html = '<thead><tr><th class="zone-col">Zone</th>';
+  DATA.activities.forEach(a => {
+    html += `<th style="min-width:130px;text-align:center;">${a.emoji}<br>${a.name}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  // Data rows
+  DATA.zones.forEach(z => {
+    html += `<tr><td class="zone-td"><div class="zone-td-name">${z.name}</div><div class="zone-td-num">#${z.id} · ${z.note}</div></td>`;
+    DATA.activities.forEach(a => {
+      const t = z.timings[a.key];
+      if (t) {
+        html += `<td><div class="timing-cell has-time" onclick="openTimingModal(${z.id},'${a.key}')">${t}<span class="edit-hint">✏️ edit</span></div></td>`;
+      } else {
+        html += `<td style="background:rgba(0,0,0,0.15)"><div class="timing-cell no-time" onclick="openTimingModal(${z.id},'${a.key}')">N/A<span class="edit-hint">✏️ set</span></div></td>`;
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+
+// ── Timing Modal ──
+let _timingRadio = 'available';
+
+function openTimingModal(zoneId, actKey) {
+  const z = DATA.zones.find(z => z.id === zoneId);
+  const a = DATA.activities.find(a => a.key === actKey);
+  const t = z.timings[actKey];
+
+  document.getElementById('t-zone-id').value = zoneId;
+  document.getElementById('t-act-key').value = actKey;
+  document.getElementById('t-zone-name').textContent = z.name;
+  document.getElementById('t-act-name').textContent = a.emoji + ' ' + a.name;
+
+  if (t) {
+    selectRadio('available');
+    // Try to parse "X PM – Y PM (note)"
+    const match = t.match(/^(.*?)\s*–\s*(.*?)(?:\s*\((.+)\))?$/);
+    if (match) {
+      document.getElementById('t-start').value = match[1].trim();
+      document.getElementById('t-end').value = match[2].trim();
+      document.getElementById('t-note').value = match[3] || '';
+    } else {
+      document.getElementById('t-start').value = t;
+      document.getElementById('t-end').value = '';
+      document.getElementById('t-note').value = '';
+    }
+  } else {
+    selectRadio('na');
+    document.getElementById('t-start').value = '';
+    document.getElementById('t-end').value = '';
+    document.getElementById('t-note').value = '';
+  }
+  openModal('timing-modal');
+}
+
+function selectRadio(val) {
+  _timingRadio = val;
+  document.getElementById('ro-available').classList.toggle('selected', val === 'available');
+  document.getElementById('ro-na').classList.toggle('selected', val === 'na');
+  document.getElementById('timing-fields').style.display = val === 'available' ? 'block' : 'none';
+}
+
+function quickFill(start, end) {
+  document.getElementById('t-start').value = start;
+  document.getElementById('t-end').value = end;
+}
+
+function saveTiming() {
+  const zoneId = parseInt(document.getElementById('t-zone-id').value);
+  const actKey = document.getElementById('t-act-key').value;
+  const z = DATA.zones.find(z => z.id === zoneId);
+
+  if (_timingRadio === 'na') {
+    z.timings[actKey] = null;
+  } else {
+    const start = document.getElementById('t-start').value.trim();
+    const end   = document.getElementById('t-end').value.trim();
+    const note  = document.getElementById('t-note').value.trim();
+    if (!start) { showToast('Start time is required', true); return; }
+    let timing = end ? `${start} – ${end}` : start;
+    if (note) timing += ` (${note})`;
+    z.timings[actKey] = timing;
+  }
+
+  closeModal('timing-modal');
+  renderMatrix();
+  renderDashboard();
+  showToast('✅ Timing saved');
+}
+
+// ══════════════════════════════════════════════════════
+// EXPORT
+// ══════════════════════════════════════════════════════
+function generateExportCode() {
+  const actsJS = JSON.stringify(DATA.activities, null, 2)
+    .replace(/"key":/g, 'key:')
+    .replace(/"name":/g, 'name:')
+    .replace(/"emoji":/g, 'emoji:');
+
+  const zonesJS = DATA.zones.map(z => {
+    const timingsEntries = DATA.activities.map(a => {
+      const t = z.timings[a.key];
+      return `      ${a.key}: ${t ? JSON.stringify(t) : 'null'}`;
+    }).join(',\n');
+    return `  {\n    id: ${z.id}, name: ${JSON.stringify(z.name)},\n    note: ${JSON.stringify(z.note)},\n    timings: {\n${timingsEntries}\n    }\n  }`;
+  }).join(',\n');
+
+  return `// ── DATA ── (generated by Admin Panel)\n\nconst ACTIVITIES = ${JSON.stringify(DATA.activities, null, 2)};\n\nconst ZONES = [\n${zonesJS}\n];`;
+}
+
+function renderExport() {
+  document.getElementById('export-box').textContent = generateExportCode();
+}
+
+function copyExport() {
+  const code = generateExportCode();
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('📋 Copied to clipboard!');
+  }).catch(() => {
+    showToast('Could not copy — please select and copy manually', true);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// MODALS & UTILITIES
+// ══════════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+// Close modal on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.add('hidden'); });
+});
+
+let _toastTimer = null;
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden', 'error');
+  if (isError) t.classList.add('error');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.add('hidden'), 3000);
+}
+
+// Login on enter key from anywhere when login screen visible
+document.getElementById('pwd-input').focus();
+</script>
+</body>
+</html>
